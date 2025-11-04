@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,11 +15,22 @@ public class MainMenu extends JFrame {
 
         setTitle("Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(mainPanel);
         setSize(800, 600);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel cardPanel = new JPanel(cardLayout);
 
         mainPanel.add(playButton);
         mainPanel.add(charactersButton);
+
+        JPanel charactersPanel = new JPanel();
+        JLabel label1 = new JLabel("Test charactersPanel");
+        charactersPanel.add(label1);
+
+        cardPanel.add(mainPanel, "mainPanel");
+        cardPanel.add(charactersPanel, "charactersPanel");
+        add(cardPanel);
+        cardLayout.show(cardPanel, "mainPanel");
 
         setVisible(true);
 
@@ -34,6 +46,7 @@ public class MainMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("C");
+                cardLayout.show(cardPanel, "charactersPanel");
             }
         });
     }
