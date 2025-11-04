@@ -1,4 +1,4 @@
-package org.example;
+package game.utils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

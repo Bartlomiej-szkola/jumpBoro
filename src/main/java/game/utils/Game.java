@@ -1,4 +1,4 @@
-package org.example;
+package game.utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +10,9 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
         setResizable(false);
+        add(new GamePanel());
+        pack();
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 }
