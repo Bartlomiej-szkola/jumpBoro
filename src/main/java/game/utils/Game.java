@@ -13,7 +13,7 @@ public class Game extends JFrame {
         setTitle("Jump King 2");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setUndecorated(true);
         setResizable(false);
         add(new GamePanel());
         setVisible(true);
