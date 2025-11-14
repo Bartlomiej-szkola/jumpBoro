@@ -27,6 +27,7 @@ public class GamePanel extends JPanel {
     private Gravity gravity;
     private final Timer gameTimer;
     private final java.util.List<Platform> platforms = new java.util.ArrayList<>();
+    private DebugInfo debugInfo;
 
     public GamePanel() {
         setFocusable(true);
@@ -37,6 +38,9 @@ public class GamePanel extends JPanel {
         movement = new Movement(player, gravity);
         collisions = new Collisions(player, gravity, movement);
         addKeyListener(new KeyInput(movement));
+
+        debugInfo = new DebugInfo();
+        add(debugInfo);
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -73,5 +77,6 @@ public class GamePanel extends JPanel {
             p.draw(g);
         }
         player.draw(g); // rysowanie gracza
+        debugInfo.updateInfo(movement.isJumpingLeft(), movement.isJumpingRight());
     }
 }
