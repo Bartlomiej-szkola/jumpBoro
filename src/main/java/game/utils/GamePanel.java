@@ -34,8 +34,9 @@ public class GamePanel extends JPanel {
         background = new ImageIcon(Objects.requireNonNull(getClass().getResource("/background.png"))).getImage();
 
         player = new Character1();
-        gravity = new Gravity(player, 1.25);
+        gravity = new Gravity(player, 0.8);
         movement = new Movement(player, gravity);
+        gravity.setMovement(movement);
         collisions = new Collisions(player, gravity, movement);
         addKeyListener(new KeyInput(movement));
 
@@ -56,7 +57,7 @@ public class GamePanel extends JPanel {
         // Pętla gry ~ 120 FPS
         gameTimer = new Timer(8, e -> {
             movement.update(getWidth());
-            gravity.update();
+            gravity.update(getWidth());
             collisions.checkCollisions();
             repaint();
         });
