@@ -24,7 +24,6 @@ public class Gravity {
         if(falling){
             falling = false;
             gravityVerticalSpeed = 0;
-            player.setStandingImage();
         }
     }
 
@@ -35,6 +34,6 @@ public class Gravity {
         }
     }
 
-    public boolean isFalling(){return !falling;}
+    public boolean isFalling(){return falling;}
     public double getGravityForce(){return gravityForce; }
 }

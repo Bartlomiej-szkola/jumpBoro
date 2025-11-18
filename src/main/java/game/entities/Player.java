@@ -7,10 +7,13 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Player {
-    private Image playerImage;
-    private Image playerImageStanding;
-    private Image playerImageJumping;
-    private Image playerImageBeforeJump;
+    private Image playerCurrentImage;
+    private final Image playerImageStandingRight;
+    private final Image playerImageStandingLeft;
+    private final Image playerImageJumpingRight;
+    private final Image playerImageJumpingLeft;
+    private final Image playerImageBeforeJumpRight;
+    private final Image playerImageBeforeJumpLeft;
     private int x = 0;
     private int y = 0;
     private int width;
@@ -28,20 +31,23 @@ public class Player {
         this.maxJumpHeight = maxJumpHeight;
         this.chargeSpeed = chargeSpeed;
 
-        playerImageStanding = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))).getImage();
-        playerImageJumping = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePathJumping))).getImage();
-        playerImageBeforeJump = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePathBeforeJump))).getImage();
-        playerImage = playerImageStanding;
+        playerCurrentImage = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))).getImage();
+        playerImageStandingRight = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))).getImage();
+        playerImageStandingLeft = ImageUtils.flipHorizontally(playerImageStandingRight);
+        playerImageJumpingRight = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePathJumping))).getImage();
+        playerImageJumpingLeft = ImageUtils.flipHorizontally(playerImageJumpingRight);
+        playerImageBeforeJumpRight = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePathBeforeJump))).getImage();
+        playerImageBeforeJumpLeft = ImageUtils.flipHorizontally(playerImageBeforeJumpRight);
     }
 
     public void initializeSize(int panelHeight) {
         height = panelHeight / 7;
-        width = (int) (height * ((double) playerImage.getWidth(null) / playerImage.getHeight(null)));
+        width = (int) (height * ((double) playerCurrentImage.getWidth(null) / playerCurrentImage.getHeight(null)));
         y = panelHeight - height - 130;
     }
 
     public void draw(Graphics g) {
-        g.drawImage(playerImage, x, y, width, height, null);
+        g.drawImage(playerCurrentImage, x, y, width, height, null);
     }
 
     // Metody do ruchu (enkapsulacja)
@@ -62,36 +68,33 @@ public class Player {
     }
 
 
-    public void setStandingImage(){
-        if(playerImage != playerImageStanding){
-            playerImage = playerImageStanding;
-        }
-    }
-
-    public void setJumpingImage(){
-        if(playerImage != playerImageJumping) {
-            playerImage = playerImageJumping;
-        }
-    }
-
-    public void setBeforeJumpImage(){
-        if(playerImage != playerImageBeforeJump) {
-            playerImage = playerImageBeforeJump;
-        }
-    }
 
     public void faceLeft(){ // DO POPRAWY (po zmianie zdjęcia stanu gracza, ten jest skierowany od razu w prawo, po za tym to chyba dość mało efektowny sposów i lepiej bedzie przy włączaniu gdy przypisać wszystkiie opcje zdjęcia do różnych zmiennychi potem tylko tylko przypisywac do currentImage)
         if(isFacingRight){
             isFacingRight = false;
-            playerImage = ImageUtils.flipHorizontally(playerImage);
         }
     }
 
     public void faceRight(){ // DO POPRAWY (po zmianie zdjęcia stanu gracza, ten jest skierowany od razu w prawo, po za tym to chyba dość mało efektowny sposów i lepiej bedzie przy włączaniu gdy przypisać wszystkiie opcje zdjęcia do różnych zmiennychi potem tylko tylko przypisywac do currentImage)
         if(!isFacingRight){
             isFacingRight = true;
-            playerImage = ImageUtils.flipHorizontally(playerImage);
         }
+    }
+
+
+    public void setStandingImage(){
+        if (isFacingRight && playerCurrentImage!=playerImageStandingRight) playerCurrentImage = playerImageStandingRight;
+        if (!isFacingRight && playerCurrentImage!=playerImageStandingLeft) playerCurrentImage = playerImageStandingLeft;
+    }
+
+    public void setJumpingImage(){
+        if (isFacingRight && playerCurrentImage!=playerImageJumpingRight) playerCurrentImage = playerImageJumpingRight;
+        if (!isFacingRight && playerCurrentImage!=playerImageJumpingLeft) playerCurrentImage = playerImageJumpingLeft;
+    }
+
+    public void setBeforeJumpImage(){
+        if (isFacingRight && playerCurrentImage!=playerImageBeforeJumpRight) playerCurrentImage = playerImageBeforeJumpRight;
+        if (!isFacingRight && playerCurrentImage!=playerImageBeforeJumpLeft) playerCurrentImage = playerImageBeforeJumpLeft;
     }
 
     // Gettery

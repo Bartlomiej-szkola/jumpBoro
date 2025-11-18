@@ -104,6 +104,9 @@ public class Movement {
     }
 
     public boolean isJumping(){return jumping;}
+    public void setJumping(boolean jumping){this.jumping = jumping;}
+    public void setJumpingLeft(boolean jumpingLeft){this.jumpingLeft = jumpingLeft;}
+    public void setJumpingRight(boolean jumpingRight){this.jumpingRight = jumpingRight;}
 
     // --------------------------- ŁADOWANIE SKOKU - KEYLISTENERY  -------------------
     public void startChargingJump() {
