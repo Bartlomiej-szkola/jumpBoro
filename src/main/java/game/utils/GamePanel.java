@@ -17,6 +17,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class GamePanel extends JPanel {
@@ -28,6 +30,7 @@ public class GamePanel extends JPanel {
     private final Timer gameTimer;
     private final java.util.List<Platform> platforms = new java.util.ArrayList<>();
     private DebugInfo debugInfo;
+    private Map<String, Boolean> info = new HashMap<>();
 
     public GamePanel() {
         setFocusable(true);
@@ -78,6 +81,9 @@ public class GamePanel extends JPanel {
             p.draw(g);
         }
         player.draw(g); // rysowanie gracza
-        debugInfo.updateInfo(movement.isJumpingLeft(), movement.isJumpingRight());
+        info.clear();
+        info.put("isJumpingLeft", movement.isJumpingLeft());
+        info.put("isJumpingRight", movement.isJumpingRight());
+        debugInfo.updateInfo(info);
     }
 }
