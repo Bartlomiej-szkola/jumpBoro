@@ -32,6 +32,16 @@ public class Platform {
         )).getImage();
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void draw(Graphics g, int cameraY) {
+        g.drawImage(image, x, y - cameraY, width, height, null);
+    }
+
+
+
     public void draw(Graphics g) {
         g.drawImage(image, x, y, width, height, null);
     }

@@ -94,6 +94,10 @@ public class Player {
         }
     }
 
+    public void draw(Graphics g, int cameraY) {
+        g.drawImage(playerImage, x, y - cameraY, width, height, null);
+    }
+
     // Gettery
     public int getX() { return x; }
     public int getY() { return y; }
