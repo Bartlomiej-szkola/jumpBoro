@@ -1,13 +1,8 @@
 package game.utils;
 
 import game.elements.Platform;
-import game.entities.Character1;
-import game.entities.Character2;
-import game.entities.Character3;
-import game.entities.Character4;
-import game.entities.Character5;
-import game.entities.Character6;
-import game.entities.Player;
+import game.entities.player.Character1;
+import game.entities.player.Player;
 import game.input.KeyInput;
 import game.mechanics.Collisions;
 import game.mechanics.Gravity;
@@ -44,7 +39,7 @@ public class GamePanel extends JPanel {
 
         addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) { // wykonanie metod pobierających wielkość okna (po ustaleniu wielkości okna przez jave)
+            public void componentResized(ComponentEvent e) {
                 player.initializeSize(getHeight());
                 addPlatforms();
                 requestFocusInWindow();
@@ -53,7 +48,6 @@ public class GamePanel extends JPanel {
 
         collisions.setPlatforms(platforms);
 
-        // Pętla gry ~ 120 FPS
         gameTimer = new Timer(8, e -> {
             movement.update(getWidth());
             gravity.update();
@@ -63,20 +57,21 @@ public class GamePanel extends JPanel {
         gameTimer.start();
     }
 
-    void addPlatforms(){ // dodanie platform
+    void addPlatforms(){
         platforms.add(new Platform(0, (int) (getHeight()*0.85), getWidth(), 120));
         platforms.add(new Platform(200, 500, 300, 80, "/platforma.png"));
         platforms.add(new Platform(600, 400, 250, 80, "/platforma.png"));
         platforms.add(new Platform(1000, 300, 300, 80, "/platforma.png"));
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(background, 0, 0, getWidth(), getHeight(), null); // rysowanie tła
-        for (Platform p : platforms) { // rysowanie platform
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        for (Platform p : platforms) {
             p.draw(g);
         }
-        player.draw(g); // rysowanie gracza
+        player.draw(g);
         debugInfo.updateInfo(movement.isJumpingLeft(), movement.isJumpingRight());
     }
 }

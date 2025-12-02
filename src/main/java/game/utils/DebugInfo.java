@@ -1,7 +1,6 @@
 package game.utils;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class DebugInfo extends JLabel {
 

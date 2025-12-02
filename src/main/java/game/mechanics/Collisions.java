@@ -1,6 +1,6 @@
 package game.mechanics;
 
-import game.entities.Player;
+import game.entities.player.Player;
 import game.elements.Platform;
 
 import java.awt.*;
@@ -20,27 +20,26 @@ public class Collisions {
     }
 
     public void setPlatforms(List<Platform> platforms) {
-        this.platforms = platforms; //przypisanie platform do listy
+        this.platforms = platforms;
     }
 
-//------------------------------------------ WYKONYWANA CYKLICZNIE --------------------------------------
     public void checkCollisions() {
 
         Rectangle feet = new Rectangle(player.getX(), player.getY() + player.getHeight(), player.getWidth(), 2);
         Rectangle belowFeet = new Rectangle(player.getX(), player.getY() + player.getHeight() + 1, player.getWidth(), 2);
         Rectangle head = new Rectangle(player.getX(), player.getY(), player.getWidth(), 2);
         Rectangle leftSide = new Rectangle(
-                player.getX(),      // 2 px w lewo od gracza
-                player.getY() + 15,      // odcięcie 2 px od góry
-                2,                      // szerokość ścianki
-                player.getHeight() - 30 // wysokość pomniejszona o 2 px z góry i dołu
+                player.getX(),
+                player.getY() + 15,
+                2,
+                player.getHeight() - 30
         );
 
         Rectangle rightSide = new Rectangle(
-                player.getX() + player.getWidth(), // prawa krawędź gracza
-                player.getY() + 15,                 // +2 px od góry
-                2,                                 // szerokość prawej ścianki
-                player.getHeight() - 30             // -2 px z góry i dołu
+                player.getX() + player.getWidth(),
+                player.getY() + 15,
+                2,
+                player.getHeight() - 30
         );
 
         standingOnPlatform(feet, belowFeet);
@@ -49,8 +48,6 @@ public class Collisions {
         touchingPlatformByRightSide(rightSide);
     }
 
-    //--------------------------------------------------------------------------------------------------------
-//-------------------------------------------KOLIZJE Z PLATFORMAMI----------------------------------------
     private void standingOnPlatform(Rectangle feet, Rectangle belowFeet){
         if (platforms == null || platforms.isEmpty()) return;
 
@@ -58,9 +55,8 @@ public class Collisions {
 
         for (Platform p : platforms) {
             if (feet.intersects(p.getBounds())) {
-                // Gracz stoi na platformie
                 player.setY(p.getBounds().y - player.getHeight());
-                gravity.stopFalling();// wyłączenie grawitacji na platformach
+                gravity.stopFalling();
                 player.setStandingImage();
                 currentPlatform = p;
                 standingOnPlatform = true;
@@ -68,11 +64,8 @@ public class Collisions {
             }
         }
 
-        // Jeśli gracz już nie dotyka platformy
         if (!standingOnPlatform) {
             if (currentPlatform != null && !movement.isJumping()) {
-                // sprawdzamy, czy nadal jest nad platformą
-
                 if (!belowFeet.intersects(currentPlatform.getBounds())) {
                     gravity.startFalling();
                     currentPlatform = null;
@@ -94,6 +87,8 @@ public class Collisions {
     }
 
     private void touchingPlatformByLeftSide(Rectangle leftSide) {
+        if (platforms == null || platforms.isEmpty()) return;
+
         for (Platform p : platforms) {
             if (leftSide.intersects(p.getBounds())) {
                 movement.setJumpingLeft(false);
@@ -103,15 +98,15 @@ public class Collisions {
         }
     }
 
-    private void touchingPlatformByRightSide(Rectangle leftSide) {
+    private void touchingPlatformByRightSide(Rectangle rightSide) {
+        if (platforms == null || platforms.isEmpty()) return;
+
         for (Platform p : platforms) {
-            if (leftSide.intersects(p.getBounds())) {
+            if (rightSide.intersects(p.getBounds())) {
                 movement.setJumpingRight(false);
                 movement.setJumpingLeft(true);
                 break;
             }
         }
     }
-//--------------------------------------------------------------------------------------------------------
-
 }

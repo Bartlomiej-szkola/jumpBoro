@@ -2,8 +2,6 @@ package game.utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class CharactersPanel extends JPanel{
 
@@ -15,11 +13,6 @@ public class CharactersPanel extends JPanel{
         add(label1);
         add(backButton);
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "mainPanel");
-            }
-        });
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "mainPanel"));
     }
 }
