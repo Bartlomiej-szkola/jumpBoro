@@ -1,6 +1,5 @@
 package game.mechanics;
 
-import game.entities.base.CharacterState;
 import game.entities.player.Player;
 
 public class Movement {
@@ -13,6 +12,8 @@ public class Movement {
     private boolean jumping = false;
     private boolean jumpingLeft = false;
     private boolean jumpingRight = false;
+    private boolean fallingLeft = false;
+    private boolean fallingRight = false;
 
     private double currentJumpHeight = 0;
     private double jumpVerticalSpeed = 0;
@@ -22,7 +23,6 @@ public class Movement {
         this.gravity = gravity;
     }
 
-    // ------------------------- STEROWANIE LEWO-PRAWO -------------------------
     public void setMovingLeft(boolean movingLeft) {
         this.movingLeft = movingLeft;
     }
@@ -35,84 +35,92 @@ public class Movement {
         double dx = 0;
         double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
 
-        if (chargingJump || jumping) return; // blokada ruchu podczas ładowania i skoku
+        // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
+        if (chargingJump || jumping) {
+            if (movingLeft) player.setFacingLeft();
+            if (movingRight) player.setFacingRight();
+            return;
+        }
 
-        if (movingLeft) dx -= effectiveSpeed;
-        if (movingRight) dx += effectiveSpeed;
+        // ruch w powietrzu podczas opadania
+        if (gravity.isFalling()) {
+            if (fallingLeft) dx -= effectiveSpeed;
+            if (fallingRight) dx += effectiveSpeed;
+        } else { // normalny ruch po ziemi
+            if (movingLeft) dx -= effectiveSpeed;
+            if (movingRight) dx += effectiveSpeed;
+        }
 
         player.moveX(dx);
-
-        if (dx != 0) {
-            player.setStandingImage(); // w praktyce ustawia MOVING przez moveX
-        } else {
-            player.setStandingImage();
-        }
 
         // ograniczenia ekranu
-        if (player.getX() < 0) {
-            player.moveX(-player.getX());
-        }
-        if (player.getX() > panelWidth - player.getWidth()) {
+        if (player.getX() < 0) player.moveX(-player.getX());
+        if (player.getX() > panelWidth - player.getWidth())
             player.moveX(panelWidth - player.getWidth() - player.getX());
-        }
     }
 
-    private void handleHorizontalMovementWhileJumping(int panelWidth) {
-        double dx = 0;
-        double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
-
-        if (jumpingLeft) dx -= effectiveSpeed;
-        if (jumpingRight) dx += effectiveSpeed;
-
-        player.moveX(dx);
-
-        if (player.getX() < 0) {
-            player.moveX(-player.getX());
-        }
-        if (player.getX() > panelWidth - player.getWidth()) {
-            player.moveX(panelWidth - player.getWidth() - player.getX());
-        }
-    }
-
-    // ------------------------- SKOK -------------------------
     private void handleJump(int panelWidth) {
+        // ładowanie skoku
         if (chargingJump) {
             currentJumpHeight += player.getChargeSpeed();
-
-            if (currentJumpHeight > player.getMaxJumpHeight()) {
+            if (currentJumpHeight > player.getMaxJumpHeight())
                 currentJumpHeight = player.getMaxJumpHeight();
-            }
 
             jumpingLeft = movingLeft;
             jumpingRight = movingRight;
-            player.setBeforeJumpImage(); // ustawia stan CHARGING
+            player.setBeforeJumpImage();
         }
 
+        // faktyczny skok (wznoszenie)
         if (jumping) {
+            player.setJumpingImage();
             player.moveY(jumpVerticalSpeed);
             jumpVerticalSpeed += gravity.getGravityForce();
-            handleHorizontalMovementWhileJumping(panelWidth);
 
+            // ruch w locie podczas wznoszenia
+            double dx = 0;
+            double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
+            if (jumpingLeft) dx -= effectiveSpeed;
+            if (jumpingRight) dx += effectiveSpeed;
+            player.moveX(dx);
+
+            // ograniczenia ekranu
+            if (player.getX() < 0) player.moveX(-player.getX());
+            if (player.getX() > panelWidth - player.getWidth())
+                player.moveX(panelWidth - player.getWidth() - player.getX());
+
+            // koniec wznoszenia → zaczynamy spadanie
             if (jumpVerticalSpeed >= 0) {
                 jumping = false;
+                fallingLeft = jumpingLeft;
+                fallingRight = jumpingRight;
                 jumpingLeft = false;
                 jumpingRight = false;
-                player.setStandingImage(); // powrót do STANDING po zakończeniu skoku
             }
         }
     }
 
-    // ------------------------- GETTERY/SETTERY -------------------------
     public boolean isJumping() { return jumping; }
-    public void setJumping(boolean jumping) { this.jumping = jumping; }
-    public void setJumpingLeft(boolean jumpingLeft) { this.jumpingLeft = jumpingLeft; }
-    public void setJumpingRight(boolean jumpingRight) { this.jumpingRight = jumpingRight; }
+    public boolean isJumpingLeft() { return jumpingLeft; }
+    public boolean isJumpingRight() { return jumpingRight; }
+    // ----------------- DODATKOWE SETTERY -----------------
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
+    }
 
-    // ------------------------- ŁADOWANIE SKOKU -------------------------
+    public void setJumpingLeft(boolean jumpingLeft) {
+        this.jumpingLeft = jumpingLeft;
+    }
+
+    public void setJumpingRight(boolean jumpingRight) {
+        this.jumpingRight = jumpingRight;
+    }
+
+
     public void startChargingJump() {
         if (!jumping) {
             chargingJump = true;
-            player.setBeforeJumpImage(); // stan CHARGING
+            player.setBeforeJumpImage();
         }
     }
 
@@ -122,25 +130,18 @@ public class Movement {
             jumping = true;
             jumpVerticalSpeed = -(currentJumpHeight * gravity.getGravityForce());
             currentJumpHeight = 0;
-            player.setJumpingImage(); // stan JUMPING
+            player.setJumpingImage();
         }
     }
 
-    // ------------------------- AKTUALIZACJA -------------------------
     public void update(int panelWidth) {
         handleHorizontalMovement(panelWidth);
         handleJump(panelWidth);
 
-        // jeśli gracz nie skacze ani nie ładuje skoku, ustaw STANDING/MOVING
-        if (!jumping && !chargingJump) {
-            if (movingLeft || movingRight) {
-                player.setStandingImage(); // w praktyce MOVING
-            } else {
-                player.setStandingImage(); // STANDING
-            }
+        // ustawienie obrazu postaci na ziemi
+        if (!jumping && !chargingJump && !gravity.isFalling()) {
+            if (movingLeft || movingRight) player.setMovingImage();
+            else player.setStandingImage();
         }
     }
-
-    public boolean isJumpingLeft() { return jumpingLeft; }
-    public boolean isJumpingRight() { return jumpingRight; }
 }

@@ -55,15 +55,23 @@ public class Collisions {
 
         for (Platform p : platforms) {
             if (feet.intersects(p.getBounds())) {
+
+                // ustawiamy gracza na platformie
                 player.setY(p.getBounds().y - player.getHeight());
+
+                // MOMENT LĄDOWANIA (tylko wtedy ustawiamy obrazek stania)
+                if (gravity.isFalling() || movement.isJumping()) {
+                    player.forceSetStanding();  // <-- kluczowa zmiana
+                }
+
                 gravity.stopFalling();
-                player.setStandingImage();
                 currentPlatform = p;
                 standingOnPlatform = true;
                 break;
             }
         }
 
+        // jeśli zszedł/spadł z platformy
         if (!standingOnPlatform) {
             if (currentPlatform != null && !movement.isJumping()) {
                 if (!belowFeet.intersects(currentPlatform.getBounds())) {
@@ -73,6 +81,7 @@ public class Collisions {
             }
         }
     }
+
 
     private void touchingPlatformByHead(Rectangle head){
         if (platforms == null || platforms.isEmpty()) return;

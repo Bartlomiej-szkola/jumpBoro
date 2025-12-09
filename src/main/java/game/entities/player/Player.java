@@ -14,13 +14,13 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Player extends AbstractCharacter implements IMovable, IJumpable, IDrawable {
+
     private Image playerCurrentImage;
     private final CharacterStats stats;
 
-    private Facing facing = Facing.RIGHT; // domyślnie patrzy w prawo
+    private Facing facing = Facing.RIGHT;
     private CharacterState state = CharacterState.STANDING;
 
-    // Obrazy
     private Image standingLeft, standingRight;
     private Image movingLeft1, movingLeft2, movingRight1, movingRight2;
     private Image chargingLeft, chargingRight;
@@ -35,26 +35,26 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
                   String moving2File,
                   String chargingFile,
                   String jumpingFile) {
+
         this.stats = stats;
         loadImages(standingFile, moving1File, moving2File, chargingFile, jumpingFile);
-        playerCurrentImage = standingRight; // startowo stoi patrząc w prawo
+        playerCurrentImage = standingRight;
     }
 
     private void loadImages(String standingFile, String moving1File, String moving2File,
                             String chargingFile, String jumpingFile) {
-        // wszystkie pliki są skierowane w lewo
-        standingLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource(standingFile))).getImage();
-        movingLeft1 = new ImageIcon(Objects.requireNonNull(getClass().getResource(moving1File))).getImage();
-        movingLeft2 = new ImageIcon(Objects.requireNonNull(getClass().getResource(moving2File))).getImage();
-        chargingLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource(chargingFile))).getImage();
-        jumpingLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource(jumpingFile))).getImage();
 
-        // wersje w prawo – odwrócone
-        standingRight = ImageUtils.flipImageHorizontally(standingLeft);
-        movingRight1 = ImageUtils.flipImageHorizontally(movingLeft1);
-        movingRight2 = ImageUtils.flipImageHorizontally(movingLeft2);
-        chargingRight = ImageUtils.flipImageHorizontally(chargingLeft);
-        jumpingRight = ImageUtils.flipImageHorizontally(jumpingLeft);
+        standingRight = new ImageIcon(Objects.requireNonNull(getClass().getResource(standingFile))).getImage();
+        movingRight1 = new ImageIcon(Objects.requireNonNull(getClass().getResource(moving1File))).getImage();
+        movingRight2 = new ImageIcon(Objects.requireNonNull(getClass().getResource(moving2File))).getImage();
+        chargingRight = new ImageIcon(Objects.requireNonNull(getClass().getResource(chargingFile))).getImage();
+        jumpingRight = new ImageIcon(Objects.requireNonNull(getClass().getResource(jumpingFile))).getImage();
+
+        standingLeft = ImageUtils.flipHorizontally(standingRight);
+        movingLeft1 = ImageUtils.flipHorizontally(movingRight1);
+        movingLeft2 = ImageUtils.flipHorizontally(movingRight2);
+        chargingLeft = ImageUtils.flipHorizontally(chargingRight);
+        jumpingLeft = ImageUtils.flipHorizontally(jumpingRight);
     }
 
     public void initializeSize(int panelHeight) {
@@ -72,9 +72,14 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     @Override
     public void moveX(double dx) {
         x += dx;
+
         if (dx < 0) facing = Facing.LEFT;
         else if (dx > 0) facing = Facing.RIGHT;
-        if (dx != 0) state = CharacterState.MOVING;
+
+        // NIE nadpisujemy ruchu jeśli skaczemy lub ładujemy skok
+        if (dx != 0 && state != CharacterState.JUMPING && state != CharacterState.CHARGING) {
+            state = CharacterState.MOVING;
+        }
     }
 
     @Override
@@ -94,10 +99,29 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
         setJumpingImage();
     }
 
-    // Stany – ustawianie obrazków
+    public void setFacingLeft() {
+        facing = Facing.LEFT;
+    }
+
+    public void setFacingRight() {
+        facing = Facing.RIGHT;
+    }
+
+
     public void setStandingImage() {
+        if (state == CharacterState.JUMPING) return;
+        if (state == CharacterState.CHARGING) return;
+
         state = CharacterState.STANDING;
         playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
+    }
+
+    public void setMovingImage() {
+        if (state == CharacterState.JUMPING) return;
+        if (state == CharacterState.CHARGING) return;
+
+        state = CharacterState.MOVING;
+        // obrazek zmienia updateAnimation()
     }
 
     public void setBeforeJumpImage() {
@@ -110,22 +134,29 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
         playerCurrentImage = (facing == Facing.RIGHT) ? jumpingRight : jumpingLeft;
     }
 
+    public void forceSetStanding() {
+        state = CharacterState.STANDING; // omijamy blokady
+        playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
+    }
+
+
     public void updateAnimation() {
-        if (state == CharacterState.MOVING) {
-            long now = System.currentTimeMillis();
-            if (now - lastAnimationTime > 500) { // co pół sekundy
-                toggleFrame = !toggleFrame;
-                lastAnimationTime = now;
-            }
-            if (facing == Facing.RIGHT) {
-                playerCurrentImage = toggleFrame ? movingRight1 : movingRight2;
-            } else {
-                playerCurrentImage = toggleFrame ? movingLeft1 : movingLeft2;
-            }
+        // animujemy TYLKO chodzenie
+        if (state != CharacterState.MOVING) return;
+
+        long now = System.currentTimeMillis();
+        if (now - lastAnimationTime > 150) {
+            toggleFrame = !toggleFrame;
+            lastAnimationTime = now;
+        }
+
+        if (facing == Facing.RIGHT) {
+            playerCurrentImage = toggleFrame ? movingRight1 : movingRight2;
+        } else {
+            playerCurrentImage = toggleFrame ? movingLeft1 : movingLeft2;
         }
     }
 
-    // Gettery
     public CharacterStats getStats() { return stats; }
     public Image getCurrentImage() { return playerCurrentImage; }
     public double getSpeedMultiplier() { return stats.getSpeedMultiplier(); }
