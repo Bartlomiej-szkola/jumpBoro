@@ -27,9 +27,7 @@ public class Platform {
         this.width = width;
         this.height = height;
 
-        image = new ImageIcon(Objects.requireNonNull(
-                getClass().getResource(imagePath)
-        )).getImage();
+        image = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))).getImage();
     }
 
     public void draw(Graphics g) {
