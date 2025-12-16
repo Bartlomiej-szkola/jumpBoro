@@ -36,7 +36,7 @@ public class Movement {
         double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
-        if (chargingJump || jumping) {
+        if (chargingJump || jumping || gravity.isFalling()) {
             if (movingLeft) player.setFacingLeft();
             if (movingRight) player.setFacingRight();
             return;
@@ -76,6 +76,7 @@ public class Movement {
             player.setJumpingImage();
             player.moveY(jumpVerticalSpeed);
             jumpVerticalSpeed += gravity.getGravityForce();
+            handleHorizontalMovementWhileJumping(panelWidth, jumpingLeft, jumpingRight, false);
 
             // ruch w locie podczas wznoszenia
             double dx = 0;
@@ -99,6 +100,28 @@ public class Movement {
             }
         }
     }
+
+    public void handleHorizontalMovementWhileJumping(int panelWidth, boolean mLeft, boolean mRight, boolean isFalling) {
+        double dx = 0;
+        double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
+        if (isFalling) effectiveSpeed *= 0.8;
+
+        if (jumpingLeft) dx -= effectiveSpeed;
+        if (jumpingRight) dx += effectiveSpeed;
+
+        if (mLeft) dx -= effectiveSpeed;
+        if (mRight) dx += effectiveSpeed;
+
+        player.moveX(dx);
+
+        if (player.getX() < 0) { // po lewej
+            player.moveX(-player.getX());
+        }
+        if (player.getX() > panelWidth - player.getWidth()) { // po prawej
+            player.moveX(panelWidth - player.getWidth() - player.getX());
+        }
+    }
+
 
     public boolean isJumping() { return jumping; }
     public boolean isJumpingLeft() { return jumpingLeft; }
@@ -132,6 +155,19 @@ public class Movement {
             currentJumpHeight = 0;
             player.setJumpingImage();
         }
+    }
+
+    public boolean isFallingLeft() {
+        return fallingLeft;
+    }
+
+    public boolean isFallingRight() {
+        return fallingRight;
+    }
+
+    public void clearFallingLeftRight(){
+        fallingLeft = false;
+        fallingRight = false;
     }
 
     public void update(int panelWidth) {

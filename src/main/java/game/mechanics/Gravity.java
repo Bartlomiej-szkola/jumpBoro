@@ -7,16 +7,24 @@ public class Gravity {
     private boolean falling = false;
     private double gravityVerticalSpeed = 0;
     private final double gravityForce;
+    private Movement movement;
 
     public Gravity(Player player, double gravityForce) {
         this.player = player;
         this.gravityForce = gravityForce;
     }
 
+    public void setMovement(Movement movement) {
+        this.movement = movement;
+    }
+
     public void startFalling() {
         if (!falling) {
             falling = true;
             gravityVerticalSpeed = 0;
+            if(movement != null){
+                movement.clearFallingLeftRight();
+            }
         }
     }
 
@@ -27,10 +35,13 @@ public class Gravity {
         }
     }
 
-    public void update() {
+    public void update(int panelWidth) {
         if (falling) {
             gravityVerticalSpeed += gravityForce;
             player.moveY(gravityVerticalSpeed);
+            if((movement != null) &&  (movement.isFallingLeft() || movement.isFallingRight())){
+                movement.handleHorizontalMovementWhileJumping(panelWidth, movement.isFallingLeft(), movement.isFallingRight(), true);
+            }
         }
     }
 
