@@ -1,9 +1,6 @@
 package game.utils;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
-import java.util.StringJoiner;
 
 public class DebugInfo extends JLabel {
 

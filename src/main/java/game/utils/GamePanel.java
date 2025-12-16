@@ -1,13 +1,8 @@
 package game.utils;
 
 import game.elements.Platform;
-import game.entities.Character1;
-import game.entities.Character2;
-import game.entities.Character3;
-import game.entities.Character4;
-import game.entities.Character5;
-import game.entities.Character6;
-import game.entities.Player;
+import game.entities.player.Character1;
+import game.entities.player.Player;
 import game.input.KeyInput;
 import game.mechanics.Collisions;
 import game.mechanics.Gravity;
@@ -48,16 +43,15 @@ public class GamePanel extends JPanel {
 
         addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) { // wykonanie metod pobierających wielkość okna (po ustaleniu wielkości okna przez jave)
+            public void componentResized(ComponentEvent e) {
                 player.initializeSize(getHeight());
-                addPlatforms();
+                addPlatforms();  // dynamiczne platformy po zmianie rozmiaru
                 requestFocusInWindow();
             }
         });
 
         collisions.setPlatforms(platforms);
 
-        // Pętla gry ~ 120 FPS
         gameTimer = new Timer(8, e -> {
             movement.update(getWidth());
             gravity.update(getWidth());
@@ -67,23 +61,53 @@ public class GamePanel extends JPanel {
         gameTimer.start();
     }
 
-    void addPlatforms(){ // dodanie platform
-        platforms.add(new Platform(0, (int) (getHeight()*0.85), getWidth(), 120));
-        platforms.add(new Platform(200, 500, 300, 80, "/platforma.png"));
-        platforms.add(new Platform(600, 400, 250, 80, "/platforma.png"));
-        platforms.add(new Platform(1000, 300, 300, 80, "/platforma.png"));
+    void addPlatforms() {
+        platforms.clear(); // usuwamy poprzednie platformy przy resize
+
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+
+        // -------------------
+        // Zmienne pomocnicze dla platform
+        // -------------------
+        int groundHeight = (int)(panelHeight * 0.15); // wysokość platformy ziemi
+        int platformHeight = (int)(panelHeight * 0.08); // wszystkie inne platformy
+
+        int platformSmallWidth = (int)(panelWidth * 0.15);
+        int platformMediumWidth = (int)(panelWidth * 0.2);
+        int platformLargeWidth = (int)(panelWidth * 0.25);
+        int platformExtraLargeWidth = (int)(panelWidth * 0.3);
+
+
+        int groundY = panelHeight - groundHeight;
+        int veryHighY = (int)(panelHeight * 0.8);
+        int highY = (int)(panelHeight * 0.7);
+        int middleHighY = (int)(panelHeight * 0.6);
+        int middleY = (int)(panelHeight * 0.5);
+        int middleLowY = (int)(panelHeight * 0.4);
+        int LowHigherY = (int)(panelHeight * 0.3);
+        int LowY = (int)(panelHeight * 0.2);
+        int VeryLowY = (int)(panelHeight * 0.1);
+
+        // -------------------
+        // Tworzenie platform
+        // -------------------
+        // ziemia
+        platforms.add(new Platform(0, groundY, panelWidth, groundHeight));
+        // platformy w różnych miejscach
+        platforms.add(new Platform((int)(panelWidth * 0.2), veryHighY, platformLargeWidth, platformHeight, "/platforma.png"));
+        platforms.add(new Platform((int)(panelWidth * 0.5), middleHighY, platformMediumWidth, platformHeight, "/platforma.png"));
+        platforms.add(new Platform((int)(panelWidth * 0.7), highY, platformSmallWidth, platformHeight, "/platforma.png"));
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(background, 0, 0, getWidth(), getHeight(), null); // rysowanie tła
-        for (Platform p : platforms) { // rysowanie platform
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        for (Platform p : platforms) {
             p.draw(g);
         }
-        player.draw(g); // rysowanie gracza
-        info.clear();
-        info.put("isJumpingLeft", movement.isJumpingLeft());
-        info.put("isJumpingRight", movement.isJumpingRight());
-        debugInfo.updateInfo(info);
+        player.draw(g);
+        debugInfo.updateInfo(movement.isJumpingLeft(), movement.isJumpingRight());
     }
 }

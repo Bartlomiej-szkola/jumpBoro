@@ -1,6 +1,6 @@
 package game.mechanics;
 
-import game.entities.Player;
+import game.entities.player.Player;
 
 public class Gravity {
     private final Player player;
@@ -26,14 +26,9 @@ public class Gravity {
     }
 
     public void stopFalling() {
-        if(falling){
+        if (falling) {
             falling = false;
             gravityVerticalSpeed = 0;
-            player.setStandingImage();
-            if(movement != null){
-                movement.clearFallingLeftRight();
-            }
-
         }
     }
 
@@ -47,6 +42,6 @@ public class Gravity {
         }
     }
 
-    public boolean isFalling(){return falling;}
-    public double getGravityForce(){return gravityForce; }
+    public boolean isFalling(){ return falling; }
+    public double getGravityForce(){ return gravityForce; }
 }

@@ -36,9 +36,7 @@ public class Platform {
         g.drawImage(image, x, y, width, height, null);
     }
 
-    // getter do kolizji
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
     }
 }
-

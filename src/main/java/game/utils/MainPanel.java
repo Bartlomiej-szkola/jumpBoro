@@ -2,8 +2,6 @@ package game.utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainPanel extends JPanel {
 
@@ -15,20 +13,11 @@ public class MainPanel extends JPanel {
         add(playButton);
         add(charactersButton);
 
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Game gameWindow = new Game();
-                mainMenu.dispose();
-            }
+        playButton.addActionListener(e -> {
+            new Game();
+            mainMenu.dispose();
         });
 
-        charactersButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "charactersPanel");
-            }
-        });
-
+        charactersButton.addActionListener(e -> cardLayout.show(cardPanel, "charactersPanel"));
     }
 }
