@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class GamePanel extends JPanel {
@@ -23,14 +25,16 @@ public class GamePanel extends JPanel {
     private final Timer gameTimer;
     private final java.util.List<Platform> platforms = new java.util.ArrayList<>();
     private DebugInfo debugInfo;
+    private Map<String, Boolean> info = new HashMap<>();
 
     public GamePanel() {
         setFocusable(true);
         background = new ImageIcon(Objects.requireNonNull(getClass().getResource("/background.png"))).getImage();
 
         player = new Character1();
-        gravity = new Gravity(player, 1.25);
+        gravity = new Gravity(player, 0.8);
         movement = new Movement(player, gravity);
+        gravity.setMovement(movement);
         collisions = new Collisions(player, gravity, movement);
         addKeyListener(new KeyInput(movement));
 
@@ -50,7 +54,7 @@ public class GamePanel extends JPanel {
 
         gameTimer = new Timer(8, e -> {
             movement.update(getWidth());
-            gravity.update();
+            gravity.update(getWidth());
             collisions.checkCollisions();
             repaint();
         });

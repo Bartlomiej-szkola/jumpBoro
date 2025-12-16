@@ -144,4 +144,17 @@ public class Movement {
             else player.setStandingImage();
         }
     }
+
+    public boolean isFallingLeft() {
+        return fallingLeft;
+    }
+
+    public boolean isFallingRight() {
+        return fallingRight;
+    }
+
+    public void clearFallingLeftRight(){
+        fallingLeft = false;
+        fallingRight = false;
+    }
 }
