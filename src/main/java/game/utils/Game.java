@@ -12,6 +12,7 @@ public class Game extends JFrame {
         setIconImage(gameIcon.getImage());
         setTitle("Jump King 2");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // setSize(1920, 1080); // Psuje się na większej rozdzielczości (1440p)
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);

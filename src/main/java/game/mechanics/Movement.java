@@ -10,6 +10,13 @@ public class Movement {
     private boolean movingRight = false;
     private boolean chargingJump = false;
     private boolean jumping = false;
+    private boolean jumpingLeft = false;
+    private boolean jumpingRight = false;
+    private boolean fallingLeft = false;
+    private boolean fallingRight = false;
+
+    // Trzeba naprawić że podczas spradania można się ruszać lewo prawo
+
 
     private double currentJumpHeight = 0;
     private double jumpVerticalSpeed = 0;
@@ -34,6 +41,8 @@ public class Movement {
         double dx = 0;
         double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
 
+        if(chargingJump || jumping || gravity.isFalling()) return; // Blokada ruszania podczas ładowania skoku i skakania !!! NIE MA BLOKADY NA OPADANIE !!!
+
         if (movingLeft) dx -= effectiveSpeed;
         if (movingRight) dx += effectiveSpeed;
 
@@ -48,9 +57,29 @@ public class Movement {
         }
     }
 
+    public void handleHorizontalMovementWhileJumping(int panelWidth, boolean mLeft, boolean mRight, boolean isFalling) {
+        double dx = 0;
+        double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
+        if (isFalling) effectiveSpeed *= 0.8;
+
+
+        if (mLeft) dx -= effectiveSpeed;
+        if (mRight) dx += effectiveSpeed;
+
+        player.moveX(dx);
+
+        if (player.getX() < 0) { // po lewej
+            player.moveX(-player.getX());
+        }
+        if (player.getX() > panelWidth - player.getWidth()){ // po prawej
+            player.moveX(panelWidth - player.getWidth() - player.getX());
+        }
+    }
+
+
     // -------------------------- STROWANIE SKOKIEM --------------------
 
-    private void handleJump() { //****************** WYWOŁYWANE CYKLICZNIE *****************
+    private void handleJump(int panelWidth) { //****************** WYWOŁYWANE CYKLICZNIE *****************
         // ładowanie skoku
         if (chargingJump) { // zwiększanie wysokości skoku podczas trzymania spacji (chargingJump == true)
             currentJumpHeight += player.getChargeSpeed(); // zwiększa się o wartość zależną od postaci raz na każdą klatkę
@@ -58,6 +87,9 @@ public class Movement {
             if (currentJumpHeight > player.getMaxJumpHeight()){ // gracz nie może wyskorzyć wyżej niż ma zapisaną maksymalna wysokość skoku
                 currentJumpHeight = player.getMaxJumpHeight();
             }
+
+            jumpingLeft = movingLeft;
+            jumpingRight = movingRight;
             // przy puszczeniu spacji, odwrotność currentJumpHeight przypisuje się do zmiennej jumpVerticalSpeed, a currentJumpHeight jest ustawiane na 0
         }
 
@@ -65,10 +97,15 @@ public class Movement {
         if (jumping) {
             player.moveY(jumpVerticalSpeed); // cylkiczne zwiekszanie wysokosci gracza
             jumpVerticalSpeed += gravity.getGravityForce(); // spowolnienie wznoszenia z czasem - ładniejsza animacja
+            handleHorizontalMovementWhileJumping(panelWidth, jumpingLeft, jumpingRight, false);
 
             // osiągnięcie szczytu lotu
             if (jumpVerticalSpeed >= 0) { // kiedy prędkość gracza zmniejszy się do zera, kończymy skok
                 jumping = false;
+                    fallingLeft = jumpingLeft;
+                    fallingRight = jumpingRight;
+                jumpingLeft = false;
+                jumpingRight = false;
             }
         }
     }
@@ -97,6 +134,27 @@ public class Movement {
     // ---------------------------- AKTUALIZACJA RUCHU ------------------------------
     public void update(int panelWidth) {
         handleHorizontalMovement(panelWidth);
-        handleJump();
+        handleJump(panelWidth);
+    }
+
+    public boolean isJumpingLeft() {
+        return jumpingLeft;
+    }
+
+    public boolean isJumpingRight() {
+        return jumpingRight;
+    }
+
+    public boolean isFallingLeft() {
+        return fallingLeft;
+    }
+
+    public boolean isFallingRight() {
+        return fallingRight;
+    }
+
+    public void clearFallingLeftRight(){
+        fallingLeft = false;
+        fallingRight = false;
     }
 }
