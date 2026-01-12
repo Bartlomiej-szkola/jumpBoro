@@ -29,6 +29,12 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     private long lastAnimationTime = 0;
     private boolean toggleFrame = false;
 
+    private Rectangle feet;
+    private Rectangle belowFeet;
+    private Rectangle head;
+    private Rectangle leftSide;
+    private Rectangle rightSide;
+
     public Player(CharacterStats stats,
                   String standingFile,
                   String moving1File,
@@ -58,15 +64,26 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     }
 
     public void initializeSize(int panelHeight) {
-        height = panelHeight / 7;
-        width = (int) (height * ((double) playerCurrentImage.getWidth(null) / playerCurrentImage.getHeight(null)));
-        y = panelHeight - height - 130;
+        // Ustalamy bazową wysokość postaci (np. 1/7 ekranu)
+        this.height = panelHeight / 7;
+        // Początkowe obliczenie szerokości
+        updateDynamicWidth();
+        this.y = panelHeight - height - 130;
+    }
+
+    private void updateDynamicWidth() {
+        if (playerCurrentImage != null) {
+            double aspectRatio = (double) playerCurrentImage.getWidth(null) / playerCurrentImage.getHeight(null);
+            this.width = (int) (this.height * aspectRatio);
+        }
     }
 
     @Override
     public void draw(Graphics g) {
         updateAnimation();
-        g.drawImage(playerCurrentImage, x, y, width, height, null);
+        updateDynamicWidth(); // Przelicz szerokość przed rysowaniem
+
+        g.drawImage(playerCurrentImage, (int) x, (int) y, (int) width, (int) height, null);
     }
 
     @Override
@@ -164,4 +181,44 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     public int getBaseSpeed() { return stats.getBaseSpeed(); }
     public Facing getFacing() { return facing; }
     public CharacterState getState() { return state; }
+
+    public Rectangle getRightSide() {
+        return rightSide;
+    }
+
+    public void setRightSide(Rectangle rightSide) {
+        this.rightSide = rightSide;
+    }
+
+    public Rectangle getLeftSide() {
+        return leftSide;
+    }
+
+    public void setLeftSide(Rectangle leftSide) {
+        this.leftSide = leftSide;
+    }
+
+    public Rectangle getHead() {
+        return head;
+    }
+
+    public void setHead(Rectangle head) {
+        this.head = head;
+    }
+
+    public Rectangle getBelowFeet() {
+        return belowFeet;
+    }
+
+    public void setBelowFeet(Rectangle belowFeet) {
+        this.belowFeet = belowFeet;
+    }
+
+    public Rectangle getFeet() {
+        return feet;
+    }
+
+    public void setFeet(Rectangle feet) {
+        this.feet = feet;
+    }
 }

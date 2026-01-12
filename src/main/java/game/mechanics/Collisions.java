@@ -24,28 +24,27 @@ public class Collisions {
     }
 
     public void checkCollisions() {
-
-        Rectangle feet = new Rectangle(player.getX(), player.getY() + player.getHeight(), player.getWidth(), 2);
-        Rectangle belowFeet = new Rectangle(player.getX(), player.getY() + player.getHeight() + 1, player.getWidth(), 2);
-        Rectangle head = new Rectangle(player.getX(), player.getY(), player.getWidth(), 2);
-        Rectangle leftSide = new Rectangle(
+        player.setFeet(new Rectangle(player.getX(), player.getY() + player.getHeight(), player.getWidth(), 2));
+        player.setBelowFeet(new Rectangle(player.getX(), player.getY() + player.getHeight() + 1, player.getWidth(), 2));
+        player.setHead(new Rectangle(player.getX(), player.getY(), player.getWidth(), 2));
+        player.setLeftSide(new Rectangle(
                 player.getX(),
                 player.getY() + 15,
                 2,
                 player.getHeight() - 30
-        );
+        ));
 
-        Rectangle rightSide = new Rectangle(
+        player.setRightSide(new Rectangle(
                 player.getX() + player.getWidth(),
                 player.getY() + 15,
                 2,
                 player.getHeight() - 30
-        );
+        ));
 
-        standingOnPlatform(feet, belowFeet);
-        touchingPlatformByHead(head);
-        touchingPlatformByLeftSide(leftSide);
-        touchingPlatformByRightSide(rightSide);
+        standingOnPlatform(player.getFeet(), player.getBelowFeet());
+        touchingPlatformByHead(player.getHead());
+        touchingPlatformByLeftSide(player.getLeftSide());
+        touchingPlatformByRightSide(player.getRightSide());
     }
 
     private void standingOnPlatform(Rectangle feet, Rectangle belowFeet){
@@ -115,6 +114,51 @@ public class Collisions {
                 movement.setJumpingRight(false);
                 movement.setJumpingLeft(true);
                 break;
+            }
+        }
+    }
+
+    /**--------------------------------------------------------------------------------------------
+    ------------------------------------RYSOWANIE HITBOXÓW----------------------------------------
+    --------------------------------------------------------------------------------------------- */
+
+
+    public void drawHitboxes(Graphics g) {
+        if (player == null) return;
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2)); // grubsza linia dla hitboxów
+
+        // Hitbox stóp
+        Rectangle feet = new Rectangle(player.getX(), player.getY() + player.getHeight(), player.getWidth(), 2);
+        g2.setColor(Color.GREEN);
+        g2.draw(feet);
+
+        // Hitbox pod stopami
+        Rectangle belowFeet = new Rectangle(player.getX(), player.getY() + player.getHeight() + 1, player.getWidth(), 2);
+        g2.setColor(Color.YELLOW);
+        g2.draw(belowFeet);
+
+        // Hitbox głowy
+        Rectangle head = new Rectangle(player.getX(), player.getY(), player.getWidth(), 2);
+        g2.setColor(Color.RED);
+        g2.draw(head);
+
+        // Hitbox lewego boku
+        Rectangle leftSide = new Rectangle(player.getX(), player.getY() + 15, 2, player.getHeight() - 30);
+        g2.setColor(Color.BLUE);
+        g2.draw(leftSide);
+
+        // Hitbox prawego boku
+        Rectangle rightSide = new Rectangle(player.getX() + player.getWidth(), player.getY() + 15, 2, player.getHeight() - 30);
+        g2.setColor(Color.MAGENTA);
+        g2.draw(rightSide);
+
+        // Hitboxy platform
+        if (platforms != null) {
+            g2.setColor(Color.ORANGE);
+            for (Platform p : platforms) {
+                g2.draw(p.getBounds());
             }
         }
     }

@@ -6,11 +6,11 @@ public class Character2 extends Player {
     public Character2() {
         super(
                 new CharacterStats(3.5, 30, 1.0, 3),
-                "/character1standing.png",
-                "/character1moving1.png",
-                "/character1moving2.png",
-                "/character1charging.png",
-                "/character1jumping.png"
+                "/character2.png",
+                "/character2moving1.png",
+                "/character2moving2.png",
+                "/character2beforejump.png",
+                "/character2jumping.png"
         );
     }
 }

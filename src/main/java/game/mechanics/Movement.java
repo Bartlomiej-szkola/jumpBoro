@@ -1,6 +1,10 @@
 package game.mechanics;
 
+import game.entities.base.CharacterState;
+import game.entities.base.Facing;
 import game.entities.player.Player;
+
+import static game.utils.GamePanel.panelWidth;
 
 public class Movement {
     private final Player player;
@@ -31,14 +35,14 @@ public class Movement {
         this.movingRight = movingRight;
     }
 
-    private void handleHorizontalMovement(int panelWidth) {
+    private void handleHorizontalMovement() {
         double dx = 0;
         double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
         if (chargingJump || jumping) {
-            if (movingLeft) player.setFacingLeft();
-            if (movingRight) player.setFacingRight();
+            if (movingLeft && !player.getState().equals(CharacterState.JUMPING)) player.setFacingLeft();
+            if (movingRight && !player.getState().equals(CharacterState.JUMPING)) player.setFacingRight();
             return;
         }
 
@@ -59,7 +63,7 @@ public class Movement {
             player.moveX(panelWidth - player.getWidth() - player.getX());
     }
 
-    private void handleJump(int panelWidth) {
+    private void handleJump() {
         // ładowanie skoku
         if (chargingJump) {
             currentJumpHeight += player.getChargeSpeed();
@@ -134,9 +138,9 @@ public class Movement {
         }
     }
 
-    public void update(int panelWidth) {
-        handleHorizontalMovement(panelWidth);
-        handleJump(panelWidth);
+    public void update() {
+        handleHorizontalMovement();
+        handleJump();
 
         // ustawienie obrazu postaci na ziemi
         if (!jumping && !chargingJump && !gravity.isFalling()) {
