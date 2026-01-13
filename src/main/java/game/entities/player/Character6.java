@@ -5,7 +5,7 @@ import game.entities.base.CharacterStats;
 public class Character6 extends Player {
     public Character6() {
         super(
-                new CharacterStats(3.5, 30, 1.0, 3),
+                new CharacterStats(3.5, 30, 1.0),
                 "/character1standing.png",
                 "/character1moving1.png",
                 "/character1moving2.png",

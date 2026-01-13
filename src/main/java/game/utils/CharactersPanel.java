@@ -2,36 +2,47 @@ package game.utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CharactersPanel extends JPanel{
+public class CharactersPanel extends JPanel {
+    private List<CharacterCard> cards = new ArrayList<>();
 
     public CharactersPanel(CardLayout cardLayout, JPanel cardPanel, MainMenu mainMenu) {
+        setLayout(new BorderLayout());
 
-        JLabel label1 = new JLabel("Test charactersPanel");
-        JLabel label = new JLabel("Wybierz postać:");
-        JButton char1Button = new JButton("Postać 1");
-        JButton char2Button = new JButton("Postać 2");
-        JButton backButton = new JButton("Powrót");
+        JLabel titleLabel = new JLabel("Wybierz postać", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        add(titleLabel, BorderLayout.NORTH);
 
+        JPanel cardsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 50));
 
-        add(label1);
+        for (CharacterType type : CharacterType.values()) {
+            CharacterCard card = new CharacterCard(type, mainMenu, this);
+            cards.add(card);
+            cardsContainer.add(card);
+        }
 
-        add(label);
-        add(char1Button);
-        add(char2Button);
+        add(new JScrollPane(cardsContainer), BorderLayout.CENTER);
 
-        add(backButton);
-
-        char1Button.addActionListener(e -> {
-            mainMenu.setSelectedCharacter(CharacterType.CHARACTER_1);
-            JOptionPane.showMessageDialog(this, "Wybrano Postać 1");
-        });
-
-        char2Button.addActionListener(e -> {
-            mainMenu.setSelectedCharacter(CharacterType.CHARACTER_2);
-            JOptionPane.showMessageDialog(this, "Wybrano Postać 2");
-        });
-
+        JButton backButton = new JButton("Powrót do menu");
         backButton.addActionListener(e -> cardLayout.show(cardPanel, "mainPanel"));
+        add(backButton, BorderLayout.SOUTH);
+    }
+
+    public void highlightSelection(CharacterCard selected) {
+        for (CharacterCard card : cards) {
+            if (card == selected) {
+                card.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(Color.YELLOW, 4),
+                        BorderFactory.createEmptyBorder(8, 8, 8, 8)
+                ));
+            } else {
+                card.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(Color.BLACK, 2),
+                        BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                ));
+            }
+        }
     }
 }

@@ -22,6 +22,8 @@ public class Movement {
     private double currentJumpHeight = 0;
     private double jumpVerticalSpeed = 0;
 
+    private final double BASE_SPEED = 3;
+
     public Movement(Player player, Gravity gravity) {
         this.player = player;
         this.gravity = gravity;
@@ -37,7 +39,7 @@ public class Movement {
 
     private void handleHorizontalMovement() {
         double dx = 0;
-        double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
+        double effectiveSpeed = BASE_SPEED * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
         if (chargingJump || jumping) {
@@ -83,7 +85,7 @@ public class Movement {
 
             // ruch w locie podczas wznoszenia
             double dx = 0;
-            double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
+            double effectiveSpeed = BASE_SPEED * player.getSpeedMultiplier();
             if (jumpingLeft) dx -= effectiveSpeed;
             if (jumpingRight) dx += effectiveSpeed;
             player.moveX(dx);

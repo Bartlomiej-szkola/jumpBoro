@@ -178,7 +178,6 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     public Image getCurrentImage() { return playerCurrentImage; }
     public double getSpeedMultiplier() { return stats.getSpeedMultiplier(); }
     public double getChargeSpeed() { return stats.getChargeSpeed(); }
-    public int getBaseSpeed() { return stats.getBaseSpeed(); }
     public Facing getFacing() { return facing; }
     public CharacterState getState() { return state; }
 
