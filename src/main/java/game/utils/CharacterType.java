@@ -22,6 +22,46 @@ public enum CharacterType {
             "/character2moving2.png",
             "/character2beforejump.png",
             "/character2jumping.png"
+    ),
+    CHARACTER_3(
+            3.5,
+            30,
+            1.0,
+            "/character1standing.png",
+            "/character1moving1.png",
+            "/character1moving2.png",
+            "/character1charging.png",
+            "/character1jumping.png"
+    ),
+    CHARACTER_4(
+            3.5,
+            30,
+            1.0,
+            "/character1standing.png",
+            "/character1moving1.png",
+            "/character1moving2.png",
+            "/character1charging.png",
+            "/character1jumping.png"
+    ),
+    CHARACTER_5(
+            3.5,
+            30,
+            1.0,
+            "/character1standing.png",
+            "/character1moving1.png",
+            "/character1moving2.png",
+            "/character1charging.png",
+            "/character1jumping.png"
+    ),
+    CHARACTER_6(
+            3.5,
+            30,
+            1.0,
+            "/character1standing.png",
+            "/character1moving1.png",
+            "/character1moving2.png",
+            "/character1charging.png",
+            "/character1jumping.png"
     );
 
 

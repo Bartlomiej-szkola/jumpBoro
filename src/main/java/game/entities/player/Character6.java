@@ -1,16 +1,17 @@
 package game.entities.player;
 
 import game.entities.base.CharacterStats;
+import game.utils.CharacterType;
 
 public class Character6 extends Player {
     public Character6() {
         super(
-                new CharacterStats(3.5, 30, 1.0),
-                "/character1standing.png",
-                "/character1moving1.png",
-                "/character1moving2.png",
-                "/character1charging.png",
-                "/character1jumping.png"
+                CharacterType.CHARACTER_6.stats,
+                CharacterType.CHARACTER_6.standingFile,
+                CharacterType.CHARACTER_6.moving1File,
+                CharacterType.CHARACTER_6.moving2File,
+                CharacterType.CHARACTER_6.chargingFile,
+                CharacterType.CHARACTER_6.jumpingFile
         );
     }
 }
