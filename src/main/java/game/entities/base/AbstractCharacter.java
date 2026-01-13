@@ -1,7 +1,7 @@
 package game.entities.base;
 
 public abstract class AbstractCharacter {
-    protected int x, y, width, height;
+    protected int x, y, width, height, baseHeight, beforeJumpHeight, jumpingHeight;
 
     public abstract void moveX(double dx);
     public abstract void moveY(double dy);
