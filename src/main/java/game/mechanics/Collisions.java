@@ -6,8 +6,7 @@ import game.elements.Platform;
 import java.awt.*;
 import java.util.List;
 
-public class Collisions {
-    private final Player player;
+public class Collisions {    private final Player player;
     private final Gravity gravity;
     private final Movement movement;
     private List<Platform> platforms;
@@ -31,14 +30,14 @@ public class Collisions {
                 player.getX(),
                 player.getY() + 15,
                 2,
-                player.getHeight() - 30
+                player.getHeight() - 60
         ));
 
         player.setRightSide(new Rectangle(
                 player.getX() + player.getWidth(),
                 player.getY() + 15,
                 2,
-                player.getHeight() - 30
+                player.getHeight() - 60
         ));
 
         standingOnPlatform(player.getFeet(), player.getBelowFeet());
@@ -53,7 +52,7 @@ public class Collisions {
         boolean standingOnPlatform = false;
 
         for (Platform p : platforms) {
-            if (feet.intersects(p.getBounds())) {
+            if (player.getFeet().intersects(p.getBounds())) {
 
                 // ustawiamy gracza na platformie
                 player.setY(p.getBounds().y - player.getHeight());
@@ -87,6 +86,7 @@ public class Collisions {
 
         for (Platform p : platforms) {
             if (head.intersects(p.getBounds())) {
+                System.out.println("Kolizja głową");
                 movement.setJumping(false);
                 gravity.startFalling();
                 break;
@@ -99,6 +99,7 @@ public class Collisions {
 
         for (Platform p : platforms) {
             if (leftSide.intersects(p.getBounds())) {
+                System.out.println("Kolizja z lewej");
                 movement.setJumpingLeft(false);
                 movement.setJumpingRight(true);
                 break;
@@ -111,6 +112,7 @@ public class Collisions {
 
         for (Platform p : platforms) {
             if (rightSide.intersects(p.getBounds())) {
+                System.out.println("Kolizja z prawej");
                 movement.setJumpingRight(false);
                 movement.setJumpingLeft(true);
                 break;
@@ -119,9 +121,8 @@ public class Collisions {
     }
 
     /**--------------------------------------------------------------------------------------------
-    ------------------------------------RYSOWANIE HITBOXÓW----------------------------------------
-    --------------------------------------------------------------------------------------------- */
-
+     ------------------------------------RYSOWANIE HITBOXÓW----------------------------------------
+     --------------------------------------------------------------------------------------------- */
 
     public void drawHitboxes(Graphics g) {
         if (player == null) return;
@@ -130,29 +131,24 @@ public class Collisions {
         g2.setStroke(new BasicStroke(2)); // grubsza linia dla hitboxów
 
         // Hitbox stóp
-        Rectangle feet = new Rectangle(player.getX(), player.getY() + player.getHeight(), player.getWidth(), 2);
         g2.setColor(Color.GREEN);
-        g2.draw(feet);
+        g2.draw(player.getFeet());
 
         // Hitbox pod stopami
-        Rectangle belowFeet = new Rectangle(player.getX(), player.getY() + player.getHeight() + 1, player.getWidth(), 2);
         g2.setColor(Color.YELLOW);
-        g2.draw(belowFeet);
+        g2.draw(player.getBelowFeet());
 
         // Hitbox głowy
-        Rectangle head = new Rectangle(player.getX(), player.getY(), player.getWidth(), 2);
         g2.setColor(Color.RED);
-        g2.draw(head);
+        g2.draw(player.getHead());
 
         // Hitbox lewego boku
-        Rectangle leftSide = new Rectangle(player.getX(), player.getY() + 15, 2, player.getHeight() - 30);
         g2.setColor(Color.BLUE);
-        g2.draw(leftSide);
+        g2.draw(player.getLeftSide());
 
         // Hitbox prawego boku
-        Rectangle rightSide = new Rectangle(player.getX() + player.getWidth(), player.getY() + 15, 2, player.getHeight() - 30);
         g2.setColor(Color.MAGENTA);
-        g2.draw(rightSide);
+        g2.draw(player.getRightSide());
 
         // Hitboxy platform
         if (platforms != null) {

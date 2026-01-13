@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
+import static game.utils.GamePanel.panelHeight;
+
 public class Player extends AbstractCharacter implements IMovable, IJumpable, IDrawable {
 
     private Image playerCurrentImage;
@@ -65,7 +67,10 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
 
     public void initializeSize(int panelHeight) {
         // Ustalamy bazową wysokość postaci (np. 1/7 ekranu)
-        this.height = panelHeight / 7;
+        this.baseHeight = (int) panelHeight / 7;
+        this.beforeJumpHeight = (int)(baseHeight * 0.7);
+        this.jumpingHeight = (int)(baseHeight * 0.65);
+        this.height = baseHeight;
         // Początkowe obliczenie szerokości
         updateDynamicWidth();
         this.y = panelHeight - height - 130;
@@ -131,6 +136,7 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
 
         state = CharacterState.STANDING;
         playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
+        this.height = baseHeight;
     }
 
     public void setMovingImage() {
@@ -142,13 +148,18 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     }
 
     public void setBeforeJumpImage() {
+        if(state != CharacterState.CHARGING){
+            y = y+baseHeight-beforeJumpHeight;
+        }
         state = CharacterState.CHARGING;
         playerCurrentImage = (facing == Facing.RIGHT) ? chargingRight : chargingLeft;
+        this.height = beforeJumpHeight;
     }
 
     public void setJumpingImage() {
         state = CharacterState.JUMPING;
         playerCurrentImage = (facing == Facing.RIGHT) ? jumpingRight : jumpingLeft;
+        this.height = jumpingHeight;
     }
 
     public void forceSetStanding() {
