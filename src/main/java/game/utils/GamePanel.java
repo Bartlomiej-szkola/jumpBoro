@@ -29,10 +29,15 @@ public class GamePanel extends JPanel {
     public static int panelWidth;
     private LevelController levelController;
 
-    public GamePanel() {
+    public GamePanel(CharacterType selectedCharacter) {
         setFocusable(true);
 
-        player = new Character2();
+        switch (selectedCharacter) {
+            case CHARACTER_1 -> player = new Character1();
+            case CHARACTER_2 -> player = new Character2();
+            default -> player = new Character1();
+        }
+
         gravity = new Gravity(player, 1.25);
         movement = new Movement(player, gravity);
         collisions = new Collisions(player, gravity, movement);

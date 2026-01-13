@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainMenu extends JFrame {
+    private CharacterType selectedCharacter = CharacterType.CHARACTER_1;
 
     public MainMenu() {
 
@@ -15,7 +16,7 @@ public class MainMenu extends JFrame {
         JPanel cardPanel = new JPanel(cardLayout);
 
         JPanel mainPanel = new MainPanel(cardLayout, cardPanel, this);
-        JPanel charactersPanel = new CharactersPanel(cardLayout, cardPanel);
+        JPanel charactersPanel = new CharactersPanel(cardLayout, cardPanel, this);
 
         cardPanel.add(mainPanel, "mainPanel");
         cardPanel.add(charactersPanel, "charactersPanel");
@@ -23,5 +24,13 @@ public class MainMenu extends JFrame {
         cardLayout.show(cardPanel, "mainPanel");
 
         setVisible(true);
+    }
+
+    public CharacterType getSelectedCharacter() {
+        return selectedCharacter;
+    }
+
+    public void setSelectedCharacter(CharacterType character) {
+        this.selectedCharacter = character;
     }
 }

@@ -14,7 +14,7 @@ public class MainPanel extends JPanel {
         add(charactersButton);
 
         playButton.addActionListener(e -> {
-            new Game();
+            new Game(mainMenu.getSelectedCharacter());
             mainMenu.dispose();
         });
 
