@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 public class CharacterCard extends JPanel {
 
     public CharacterCard(CharacterType character, MainMenu mainMenu, CharactersPanel parent) {
+        setPreferredSize(new Dimension(180, 280));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(Color.BLACK, 2),
@@ -61,5 +62,19 @@ public class CharacterCard extends JPanel {
             mainMenu.setSelectedCharacter(character);
             parent.highlightSelection(CharacterCard.this);
         });
+    }
+
+    public void setSelected(boolean isSelected) {
+        if (isSelected) {
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.YELLOW, 5),
+                    BorderFactory.createEmptyBorder(8, 8, 8, 8)
+            ));
+        } else {
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.BLACK, 2),
+                    BorderFactory.createEmptyBorder(11, 11, 11, 11)
+            ));
+        }
     }
 }
