@@ -7,16 +7,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class CharacterCard extends JPanel {
+    public static final int CARD_WIDTH = 180;
+    public static final int CARD_HEIGHT = 280;
+    public static final int H_GAP = 30; // Odstęp poziomy pomiędzy kartami
+    public static final int V_GAP = 30; // Odstęp pionowy
 
     public CharacterCard(CharacterType character, MainMenu mainMenu, CharactersPanel parent) {
-        setPreferredSize(new Dimension(180, 280));
+        setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(Color.BLACK, 2),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
         setBackground(Color.WHITE);
         setAlignmentX(Component.CENTER_ALIGNMENT);
+        setSelected(false);
 
         // ZDJĘCIE
         JLabel imgLabel = new JLabel();

@@ -20,7 +20,7 @@ public class CharactersPanel extends JPanel {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         add(titleLabel, BorderLayout.NORTH);
 
-        cardsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
+        cardsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, CharacterCard.H_GAP, CharacterCard.V_GAP));
 
         for (CharacterType type : CharacterType.values()) {
             CharacterCard card = new CharacterCard(type, mainMenu, this);
@@ -62,12 +62,10 @@ public class CharactersPanel extends JPanel {
         int width = scrollPane.getViewport().getWidth();
         if (width <= 0) return;
 
-        // Pobierz wymiary pojedynczej karty (muszą być zgodne z CharacterCard)
-        // do poprawy
-        int cardWidth = 180;
-        int cardHeight = 280;
-        int hGap = 30;
-        int vGap = 30;
+        int cardWidth = CharacterCard.CARD_WIDTH;
+        int cardHeight = CharacterCard.CARD_HEIGHT;
+        int hGap = CharacterCard.H_GAP;
+        int vGap = CharacterCard.V_GAP;
 
         int cardsPerRow = Math.max(1, width / (cardWidth + hGap));
         int numRows = (int) Math.ceil((double) cards.size() / cardsPerRow);
