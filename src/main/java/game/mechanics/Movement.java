@@ -3,6 +3,7 @@ package game.mechanics;
 import game.entities.base.CharacterState;
 import game.entities.base.Facing;
 import game.entities.player.Player;
+import game.utils.SoundManager;
 
 import static game.utils.GamePanel.panelWidth;
 
@@ -137,6 +138,7 @@ public class Movement {
             jumpVerticalSpeed = -(currentJumpHeight * gravity.getGravityForce());
             currentJumpHeight = 0;
             player.setJumpingImage();
+            SoundManager.playSound("jump");
         }
     }
 

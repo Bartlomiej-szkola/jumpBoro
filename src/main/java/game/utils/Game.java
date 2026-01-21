@@ -10,13 +10,18 @@ public class Game extends JFrame {
     public Game(CharacterType selectedCharacter) {
         setIconImage(gameIcon.getImage());
         setTitle("Jump King 2");
-//        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setSize(1920, 1080);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
         add(new GamePanel(selectedCharacter, this));
         setVisible(true);
         setLocationRelativeTo(null);
+
+        // Załadowanie dźwięków
+        SoundManager.loadSound("jump", "jump.wav");
+        SoundManager.loadSound("land", "land.wav");
+        SoundManager.loadSound("bump", "bump.wav");
+        SoundManager.loadSound("fall", "fall.wav");
     }
 }

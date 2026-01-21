@@ -36,4 +36,5 @@ public class Gravity {
 
     public boolean isFalling(){ return falling; }
     public double getGravityForce(){ return gravityForce; }
+    public double getGravityVerticalSpeed() { return gravityVerticalSpeed; }
 }

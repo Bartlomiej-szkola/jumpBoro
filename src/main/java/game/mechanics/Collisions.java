@@ -2,6 +2,7 @@ package game.mechanics;
 
 import game.entities.player.Player;
 import game.elements.Platform;
+import game.utils.SoundManager;
 
 import java.awt.*;
 import java.util.List;
@@ -60,6 +61,13 @@ public class Collisions {    private final Player player;
                 // MOMENT LĄDOWANIA (tylko wtedy ustawiamy obrazek stania)
                 if (gravity.isFalling() || movement.isJumping()) {
                     player.forceSetStanding();  // <-- kluczowa zmiana
+
+                    if(gravity.getGravityVerticalSpeed() > 50){ // do dostosowania
+                        SoundManager.playSound("fall");
+                    }
+                    else{
+                        SoundManager.playSound("land");
+                    }
                 }
 
                 gravity.stopFalling();
@@ -89,6 +97,7 @@ public class Collisions {    private final Player player;
                 System.out.println("Kolizja głową");
                 movement.setJumping(false);
                 gravity.startFalling();
+                SoundManager.playSound("bump");
                 break;
             }
         }
@@ -102,6 +111,7 @@ public class Collisions {    private final Player player;
                 System.out.println("Kolizja z lewej");
                 movement.setJumpingLeft(false);
                 movement.setJumpingRight(true);
+                SoundManager.playSound("bump");
                 break;
             }
         }
@@ -115,6 +125,7 @@ public class Collisions {    private final Player player;
                 System.out.println("Kolizja z prawej");
                 movement.setJumpingRight(false);
                 movement.setJumpingLeft(true);
+                SoundManager.playSound("bump");
                 break;
             }
         }
