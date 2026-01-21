@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Objects;
+import javax.swing.JOptionPane;
 
 public class GamePanel extends JPanel {
 
@@ -28,8 +29,10 @@ public class GamePanel extends JPanel {
     public static int panelHeight;
     public static int panelWidth;
     private LevelController levelController;
+    private final JFrame parentFrame;
 
-    public GamePanel(CharacterType selectedCharacter) {
+    public GamePanel(CharacterType selectedCharacter, JFrame parentFrame) {
+        this.parentFrame = parentFrame;
         setFocusable(true);
 
         switch (selectedCharacter) {
@@ -59,7 +62,14 @@ public class GamePanel extends JPanel {
             }
         });
 
-
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
+                    showPauseMenu();
+                }
+            }
+        });
 
         gameTimer = new Timer(8, e -> {
             movement.update();
@@ -71,6 +81,31 @@ public class GamePanel extends JPanel {
             repaint();
         });
         gameTimer.start();
+    }
+
+    private void showPauseMenu(){
+        gameTimer.stop();
+        String[] options = {"Wznów", "Powrót do Menu", "Wyjdź z gry"};
+        int choice = JOptionPane.showOptionDialog(
+                this,
+                "Pauza",
+                "Menu Gry",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        if (choice == 0 || choice == -1) {
+            gameTimer.start();
+            requestFocusInWindow();
+        } else if (choice == 1) {
+            parentFrame.dispose();
+            new MainMenu();
+        } else if (choice == 2) {
+            System.exit(0);
+        }
     }
 
     @Override
