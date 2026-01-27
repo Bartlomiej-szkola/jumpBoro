@@ -73,7 +73,7 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
         this.height = baseHeight;
         // Początkowe obliczenie szerokości
         updateDynamicWidth();
-        this.y = panelHeight - height - 130;
+        this.y = panelHeight - height - 120;
     }
 
     private void updateDynamicWidth() {
@@ -136,7 +136,9 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
 
         state = CharacterState.STANDING;
         playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
-        this.height = baseHeight;
+
+        /// Chyba nie potrzebne
+        /// this.height = baseHeight;
     }
 
     public void setMovingImage() {
@@ -145,6 +147,8 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
 
         state = CharacterState.MOVING;
         // obrazek zmienia updateAnimation()
+        /// Chyba nie potrzebne
+        /// this.height = baseHeight;
     }
 
     public void setBeforeJumpImage() {
@@ -165,6 +169,7 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     public void forceSetStanding() {
         state = CharacterState.STANDING; // omijamy blokady
         playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
+        this.height = baseHeight;
     }
 
 
@@ -189,7 +194,6 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     public Image getCurrentImage() { return playerCurrentImage; }
     public double getSpeedMultiplier() { return stats.getSpeedMultiplier(); }
     public double getChargeSpeed() { return stats.getChargeSpeed(); }
-    public int getBaseSpeed() { return stats.getBaseSpeed(); }
     public Facing getFacing() { return facing; }
     public CharacterState getState() { return state; }
 
@@ -232,4 +236,6 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     public void setFeet(Rectangle feet) {
         this.feet = feet;
     }
+
+
 }

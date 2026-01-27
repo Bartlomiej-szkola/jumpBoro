@@ -13,4 +13,16 @@ public abstract class AbstractCharacter {
 
     public void setX(int x) { this.x = x; }
     public void setY(int y) { this.y = y; }
+
+    public int getBaseHeight() {
+        return baseHeight;
+    }
+
+    public int getBeforeJumpHeight() {
+        return beforeJumpHeight;
+    }
+
+    public int getJumpingHeight() {
+        return jumpingHeight;
+    }
 }

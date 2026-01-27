@@ -2,6 +2,7 @@ package game.mechanics;
 
 import game.entities.player.Player;
 import game.elements.Platform;
+import game.utils.SoundManager;
 
 import java.awt.*;
 import java.util.List;
@@ -23,27 +24,29 @@ public class Collisions {    private final Player player;
     }
 
     public void checkCollisions() {
-        player.setFeet(new Rectangle(player.getX(), player.getY() + player.getHeight(), player.getWidth(), 2));
-        player.setBelowFeet(new Rectangle(player.getX(), player.getY() + player.getHeight() + 1, player.getWidth(), 2));
-        player.setHead(new Rectangle(player.getX(), player.getY(), player.getWidth(), 2));
+        player.setFeet(new Rectangle(player.getX()+2, player.getY() + player.getHeight(), player.getWidth()-4, 2));
+        player.setBelowFeet(new Rectangle(player.getX()+2, player.getY() + player.getHeight() + 2, player.getWidth()-4, 2));
+        player.setHead(new Rectangle(player.getX()+2, player.getY(), player.getWidth()-4, 2));
         player.setLeftSide(new Rectangle(
                 player.getX(),
-                player.getY() + 15,
+                player.getY() + 50,
                 2,
                 player.getHeight() - 60
         ));
 
         player.setRightSide(new Rectangle(
                 player.getX() + player.getWidth(),
-                player.getY() + 15,
+                player.getY() + 50,
                 2,
                 player.getHeight() - 60
         ));
 
-        standingOnPlatform(player.getFeet(), player.getBelowFeet());
         touchingPlatformByHead(player.getHead());
         touchingPlatformByLeftSide(player.getLeftSide());
         touchingPlatformByRightSide(player.getRightSide());
+        standingOnPlatform(player.getFeet(), player.getBelowFeet());
+        /// sprawdzaniue predkosci vertykalnej (ujemna = wznoszenie, dodatnia = opadanie)
+        /// System.out.println(movement.getJumpVerticalSpeed());
     }
 
     private void standingOnPlatform(Rectangle feet, Rectangle belowFeet){
@@ -52,17 +55,27 @@ public class Collisions {    private final Player player;
         boolean standingOnPlatform = false;
 
         for (Platform p : platforms) {
-            if (player.getFeet().intersects(p.getBounds())) {
+            // Sprawdzamy kolizję stóp TYLKO gdy gracz opada (verticalSpeed >= 0)
+            // To zapobiega teleportacji na górę, gdy gracz uderzy w platformę z boku lub od dołu
+            if (player.getFeet().intersects(p.getBounds()) && movement.getJumpVerticalSpeed() >= 0) {
 
-                // ustawiamy gracza na platformie
                 player.setY(p.getBounds().y - player.getHeight());
 
-                // MOMENT LĄDOWANIA (tylko wtedy ustawiamy obrazek stania)
                 if (gravity.isFalling() || movement.isJumping()) {
-                    player.forceSetStanding();  // <-- kluczowa zmiana
+                    player.moveY(-(player.getBaseHeight()-player.getHeight()));
+                    player.forceSetStanding();
+
+                    if(gravity.getGravityVerticalSpeed() > 50){ // do dostosowania
+                        SoundManager.playSound("fall");
+                    }
+                    else{
+                        SoundManager.playSound("land");
+                    }
                 }
 
                 gravity.stopFalling();
+                movement.setJumping(false);
+                movement.setJumpVerticalSpeed(0); // Resetujemy prędkość pionową
                 currentPlatform = p;
                 standingOnPlatform = true;
                 break;
@@ -87,8 +100,13 @@ public class Collisions {    private final Player player;
         for (Platform p : platforms) {
             if (head.intersects(p.getBounds())) {
                 System.out.println("Kolizja głową");
-                movement.setJumping(false);
-                gravity.startFalling();
+
+                if (movement.getJumpVerticalSpeed() > 10 || movement.getJumpVerticalSpeed() < -10)
+                    movement.setJumpVerticalSpeed(0);
+
+                SoundManager.playSound("bump");
+                /**movement.setJumping(false);
+                gravity.startFalling();*/
                 break;
             }
         }
@@ -102,6 +120,10 @@ public class Collisions {    private final Player player;
                 System.out.println("Kolizja z lewej");
                 movement.setJumpingLeft(false);
                 movement.setJumpingRight(true);
+                /// Jesli gracz sie wznosi i wtedy uderzy bokiem w platforme to zystuje na predkosci
+                if (movement.getJumpVerticalSpeed() < 0)
+                    movement.setJumpVerticalSpeed(movement.getJumpVerticalSpeed()-5);
+                SoundManager.playSound("bump");
                 break;
             }
         }
@@ -115,6 +137,10 @@ public class Collisions {    private final Player player;
                 System.out.println("Kolizja z prawej");
                 movement.setJumpingRight(false);
                 movement.setJumpingLeft(true);
+                /// Jesli gracz sie wznosi i wtedy uderzy bokiem w platforme to zystuje na predkosci
+                if (movement.getJumpVerticalSpeed() < 0)
+                    movement.setJumpVerticalSpeed(movement.getJumpVerticalSpeed()-5);
+                SoundManager.playSound("bump");
                 break;
             }
         }

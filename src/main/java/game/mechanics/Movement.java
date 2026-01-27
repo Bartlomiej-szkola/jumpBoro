@@ -22,6 +22,8 @@ public class Movement {
     private double currentJumpHeight = 0;
     private double jumpVerticalSpeed = 0;
 
+    private final double BASE_SPEED = 3;
+
     public Movement(Player player, Gravity gravity) {
         this.player = player;
         this.gravity = gravity;
@@ -35,21 +37,36 @@ public class Movement {
         this.movingRight = movingRight;
     }
 
+    public double getJumpVerticalSpeed() {
+        return jumpVerticalSpeed;
+    }
+
+    public void setJumpVerticalSpeed(double jumpVerticalSpeed) {
+        this.jumpVerticalSpeed = jumpVerticalSpeed;
+    }
+
     private void handleHorizontalMovement() {
         double dx = 0;
-        double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
+        double effectiveSpeed = BASE_SPEED * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
+        /// JEST JESZCZE JAKAŚ INNA BLOKADA BO PO ZAKOMENTOWANIU TEGO DALEJ BLOKUJE
         if (chargingJump || jumping) {
             if (movingLeft && !player.getState().equals(CharacterState.JUMPING)) player.setFacingLeft();
             if (movingRight && !player.getState().equals(CharacterState.JUMPING)) player.setFacingRight();
+            //System.out.println("Jumping: " + jumping);
             return;
         }
 
+        /// TUTAJ BŁĄD POOWODUJĄCY ZMIANE KIERUNKU LEWO PRAWO PODCZAS SPADANIA Z PLATFORMY I UDERZANIA GŁOWĄ W COŚ
         // ruch w powietrzu podczas opadania
-        if (gravity.isFalling()) {
+        if (gravity.isFalling()) {/**
             if (fallingLeft) dx -= effectiveSpeed;
             if (fallingRight) dx += effectiveSpeed;
+            if (fallingLeft) System.out.println("Falling Left");
+            if (fallingRight) System.out.println("Falling Right");*/
+            if (movingLeft) dx -= effectiveSpeed;
+            if (movingRight) dx += effectiveSpeed;
         } else { // normalny ruch po ziemi
             if (movingLeft) dx -= effectiveSpeed;
             if (movingRight) dx += effectiveSpeed;
@@ -83,9 +100,10 @@ public class Movement {
 
             // ruch w locie podczas wznoszenia
             double dx = 0;
-            double effectiveSpeed = player.getBaseSpeed() * player.getSpeedMultiplier();
-            if (jumpingLeft) dx -= effectiveSpeed;
-            if (jumpingRight) dx += effectiveSpeed;
+            double effectiveSpeed = BASE_SPEED * player.getSpeedMultiplier();
+            /// Zwiększyłem prędkość lotu w bok podczas skoku
+            if (jumpingLeft) dx -= effectiveSpeed*1.5;
+            if (jumpingRight) dx += effectiveSpeed*1.5;
             player.moveX(dx);
 
             // ograniczenia ekranu
@@ -94,12 +112,12 @@ public class Movement {
                 player.moveX(panelWidth - player.getWidth() - player.getX());
 
             // koniec wznoszenia → zaczynamy spadanie
-            if (jumpVerticalSpeed >= 0) {
+            if (jumpVerticalSpeed >= 0) {/**
                 jumping = false;
                 fallingLeft = jumpingLeft;
                 fallingRight = jumpingRight;
                 jumpingLeft = false;
-                jumpingRight = false;
+                jumpingRight = false;*/
             }
         }
     }
