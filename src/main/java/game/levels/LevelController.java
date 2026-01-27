@@ -30,6 +30,13 @@ public class LevelController implements IDrawable {
             case 3 -> new Level3(collisions);
             case 4 -> new Level4(collisions);
             case 5 -> new Level5(collisions);
+            case 6 -> new Level6(collisions);
+            case 7 -> new Level7(collisions);
+            case 8 -> new Level8(collisions);
+            case 9 -> new Level9(collisions);
+            case 10 -> new Level10(collisions);
+            case 11 -> new Level11(collisions);
+            case 12 -> new Level12(collisions);
             default -> new Level1(collisions);
         };
     }

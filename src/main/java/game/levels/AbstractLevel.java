@@ -13,6 +13,7 @@ public abstract class AbstractLevel implements levelsVariables {
     java.util.List<Platform> platforms = new java.util.ArrayList<>();
     private Rectangle topBorder;
     private Rectangle bottomBorder;
+    private String assetsDirectory;
 
     public AbstractLevel(){
         topBorder = new Rectangle(0, 2, panelWidth, 2);
@@ -33,5 +34,13 @@ public abstract class AbstractLevel implements levelsVariables {
 
     public void setBottomBorder(Rectangle bottomBorder) {
         this.bottomBorder = bottomBorder;
+    }
+
+    public String getAssetsDirectory() {
+        return assetsDirectory;
+    }
+
+    public void setAssetsDirectory(String assetsDirectory) {
+        this.assetsDirectory = assetsDirectory;
     }
 }

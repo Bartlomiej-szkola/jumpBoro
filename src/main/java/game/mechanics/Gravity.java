@@ -22,6 +22,7 @@ public class Gravity {
 
     public void stopFalling() {
         if (falling) {
+            System.out.println("stopFalling()");
             falling = false;
             gravityVerticalSpeed = 0;
         }
@@ -29,6 +30,7 @@ public class Gravity {
 
     public void update() {
         if (falling) {
+            System.out.println("Działania grawitacji");
             gravityVerticalSpeed += gravityForce;
             player.moveY(gravityVerticalSpeed);
         }
