@@ -1,6 +1,7 @@
 package game.mechanics;
 
 import game.entities.player.Player;
+import game.utils.GamePanel;
 
 public class Gravity {
     private final Player player;
@@ -30,8 +31,10 @@ public class Gravity {
 
     public void update() {
         if (falling) {
+            double scale = (GamePanel.panelHeight > 0) ? (double)GamePanel.panelHeight / 1440.0 : 1.0; // 1440p bo tak dziala dobrze
+
             System.out.println("Działanie grawitacji");
-            gravityVerticalSpeed += gravityForce;
+            gravityVerticalSpeed += gravityForce * scale;
             player.moveY(gravityVerticalSpeed);
         }
     }

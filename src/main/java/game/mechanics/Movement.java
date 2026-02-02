@@ -48,10 +48,13 @@ public class Movement {
         this.jumpVerticalSpeed = jumpVerticalSpeed;
     }
 
+    private double getScale() {
+        return (GamePanel.panelHeight > 0) ? GamePanel.panelHeight / BASE_WINDOW_HEIGHT : 1.0;
+    }
+
     private void handleHorizontalMovement() {
         double dx = 0;
-        double currentHeight = (GamePanel.panelHeight > 0) ? GamePanel.panelHeight : BASE_WINDOW_HEIGHT;
-        double dynamicBaseSpeed = BASE_SPEED * (currentHeight / BASE_WINDOW_HEIGHT);
+        double dynamicBaseSpeed = BASE_SPEED * getScale();
         double effectiveSpeed = dynamicBaseSpeed  * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
@@ -86,14 +89,17 @@ public class Movement {
     }
 
     private void handleJump() {
-        double currentHeight = (GamePanel.panelHeight > 0) ? GamePanel.panelHeight : BASE_WINDOW_HEIGHT;
-        double dynamicBaseSpeed = BASE_SPEED * (currentHeight / BASE_WINDOW_HEIGHT);
+        double scale = getScale();
+        double dynamicBaseSpeed = BASE_SPEED * scale;
 
         // ładowanie skoku
         if (chargingJump) {
-            currentJumpHeight += player.getChargeSpeed();
-            if (currentJumpHeight > player.getMaxJumpHeight())
-                currentJumpHeight = player.getMaxJumpHeight();
+            // Predkosc ladowania skoku
+            currentJumpHeight += player.getChargeSpeed() * scale;
+            double maxScaledJump = player.getMaxJumpHeight() * scale;
+
+            if (currentJumpHeight > maxScaledJump)
+                currentJumpHeight = maxScaledJump;
 
             jumpingLeft = movingLeft;
             jumpingRight = movingRight;
@@ -104,7 +110,8 @@ public class Movement {
         if (jumping) {
             player.setJumpingImage();
             player.moveY(jumpVerticalSpeed);
-            jumpVerticalSpeed += gravity.getGravityForce();
+
+            jumpVerticalSpeed += gravity.getGravityForce() * scale;
 
             // ruch w locie podczas wznoszenia
             double dx = 0;
