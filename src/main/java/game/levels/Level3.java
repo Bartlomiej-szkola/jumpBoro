@@ -20,8 +20,8 @@ public class Level3  extends AbstractLevel {
     public void addPlatforms(Collisions collisions) {
         platforms.clear(); // usuwamy poprzednie platformy
         // platformy w różnych miejscach
-        platforms.add(new Platform((int)(panelWidth * 0.7), veryHighY, platformLargeWidth, platformHeight, getAssetsDirectory()+"platform.png"));
-        platforms.add(new Platform((int)(panelWidth * 0.2), lowHigherY, platformSmallWidth, platformHeight, getAssetsDirectory()+"platform.png"));
+        platforms.add(new Platform((int)(panelWidth * 0.7), highY, platformLargeWidth, platformHeight, getAssetsDirectory()+"platform.png"));
+        platforms.add(new Platform((int)(panelWidth * 0.4), lowY, platformSmallWidth, platformHeight, getAssetsDirectory()+"platform.png"));
         collisions.setPlatforms(platforms);
     }
 }

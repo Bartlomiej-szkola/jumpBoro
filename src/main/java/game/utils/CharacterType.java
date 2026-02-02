@@ -5,8 +5,8 @@ import game.entities.base.CharacterStats;
 public enum CharacterType {
     CHARACTER_1(
             3.5,
-            30,
-            1.0,
+            32,
+            1.2,
             "/character1.png",
             "/character1.png",
             "/character1.png",
@@ -22,7 +22,7 @@ public enum CharacterType {
             "/character2moving2.png",
             "/character2beforejump.png",
             "/character2jumping.png"
-    ),
+    )/*,
     CHARACTER_3(
             3.5,
             30,
@@ -62,7 +62,7 @@ public enum CharacterType {
             "/character1moving2.png",
             "/character1charging.png",
             "/character1jumping.png"
-    );
+    )*/;
 
 
     public final CharacterStats stats;

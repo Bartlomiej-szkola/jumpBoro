@@ -21,6 +21,7 @@ public class Level2  extends AbstractLevel {
         platforms.clear(); // usuwamy poprzednie platformy
         // platformy w różnych miejscach
         platforms.add(new Platform((int)(panelWidth * 0.6), veryHighY, platformLargeWidth, platformHeight, getAssetsDirectory()+"platform.png"));
+        platforms.add(new Platform((int)(panelWidth * 0.45), middleY, platformSmallWidth, platformHeight, getAssetsDirectory()+"platform.png"));
         platforms.add(new Platform((int)(panelWidth * 0.1), lowY, platformMediumWidth, platformHeight, getAssetsDirectory()+"platform.png"));
         collisions.setPlatforms(platforms);
     }
