@@ -3,6 +3,7 @@ package game.mechanics;
 import game.entities.base.CharacterState;
 import game.entities.base.Facing;
 import game.entities.player.Player;
+import game.utils.GamePanel;
 
 import static game.utils.GamePanel.panelWidth;
 
@@ -23,6 +24,8 @@ public class Movement {
     private double jumpVerticalSpeed = 0;
 
     private final double BASE_SPEED = 3;
+    private final double BASE_WINDOW_HEIGHT = 1440.0;
+    // Predkosc 3 dla 1440p byla ok
 
     public Movement(Player player, Gravity gravity) {
         this.player = player;
@@ -47,7 +50,9 @@ public class Movement {
 
     private void handleHorizontalMovement() {
         double dx = 0;
-        double effectiveSpeed = BASE_SPEED * player.getSpeedMultiplier();
+        double currentHeight = (GamePanel.panelHeight > 0) ? GamePanel.panelHeight : BASE_WINDOW_HEIGHT;
+        double dynamicBaseSpeed = BASE_SPEED * (currentHeight / BASE_WINDOW_HEIGHT);
+        double effectiveSpeed = dynamicBaseSpeed  * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
         /// JEST JESZCZE JAKAŚ INNA BLOKADA BO PO ZAKOMENTOWANIU TEGO DALEJ BLOKUJE
@@ -81,6 +86,9 @@ public class Movement {
     }
 
     private void handleJump() {
+        double currentHeight = (GamePanel.panelHeight > 0) ? GamePanel.panelHeight : BASE_WINDOW_HEIGHT;
+        double dynamicBaseSpeed = BASE_SPEED * (currentHeight / BASE_WINDOW_HEIGHT);
+
         // ładowanie skoku
         if (chargingJump) {
             currentJumpHeight += player.getChargeSpeed();
@@ -100,7 +108,7 @@ public class Movement {
 
             // ruch w locie podczas wznoszenia
             double dx = 0;
-            double effectiveSpeed = BASE_SPEED * player.getSpeedMultiplier();
+            double effectiveSpeed = dynamicBaseSpeed * player.getSpeedMultiplier();
             /// Zwiększyłem prędkość lotu w bok podczas skoku
             if (jumpingLeft) dx -= effectiveSpeed*1.5;
             if (jumpingRight) dx += effectiveSpeed*1.5;
