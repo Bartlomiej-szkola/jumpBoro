@@ -117,7 +117,7 @@ public class GamePanel extends JPanel {
             levelController.draw(g);
             player.draw(g);
 
-            debugInfo.updateInfo(movement.isJumpingLeft(), movement.isJumpingRight(), 0, gravity.getGravityVerticalSpeed());
+            debugInfo.updateInfo(movement.isJumpingLeft(), movement.isJumpingRight(), 0, gravity.getGravityVerticalSpeed(), panelWidth, panelHeight);
             collisions.drawHitboxes(g);
 
         }
