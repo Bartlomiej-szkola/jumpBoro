@@ -8,8 +8,6 @@ public class ImageUtils {
 
     /**
      * Odbija obraz względem osi Y (poziomo).
-     * @param img Obraz do odbicia (Image)
-     * @return Nowy obraz Image z odbitym obrazem
      */
     public static Image flipHorizontally(Image img) {
         // Konwersja Image do BufferedImage

@@ -58,7 +58,6 @@ public class Movement {
         double effectiveSpeed = dynamicBaseSpeed  * player.getSpeedMultiplier();
 
         // blokada ruchu w locie tylko podczas ładowania skoku i wznoszenia
-        /// JEST JESZCZE JAKAŚ INNA BLOKADA BO PO ZAKOMENTOWANIU TEGO DALEJ BLOKUJE
         if (chargingJump || jumping) {
             if (movingLeft && !player.getState().equals(CharacterState.JUMPING)) player.setFacingLeft();
             if (movingRight && !player.getState().equals(CharacterState.JUMPING)) player.setFacingRight();
@@ -66,13 +65,8 @@ public class Movement {
             return;
         }
 
-        /// TUTAJ BŁĄD POOWODUJĄCY ZMIANE KIERUNKU LEWO PRAWO PODCZAS SPADANIA Z PLATFORMY I UDERZANIA GŁOWĄ W COŚ
         // ruch w powietrzu podczas opadania
-        if (gravity.isFalling()) {/**
-            if (fallingLeft) dx -= effectiveSpeed;
-            if (fallingRight) dx += effectiveSpeed;
-            if (fallingLeft) System.out.println("Falling Left");
-            if (fallingRight) System.out.println("Falling Right");*/
+        if (gravity.isFalling()) {
             if (movingLeft) dx -= effectiveSpeed;
             if (movingRight) dx += effectiveSpeed;
         } else { // normalny ruch po ziemi
@@ -116,7 +110,6 @@ public class Movement {
             // ruch w locie podczas wznoszenia
             double dx = 0;
             double effectiveSpeed = dynamicBaseSpeed * player.getSpeedMultiplier();
-            /// Zwiększyłem prędkość lotu w bok podczas skoku
             if (jumpingLeft) dx -= effectiveSpeed*1.5;
             if (jumpingRight) dx += effectiveSpeed*1.5;
             player.moveX(dx);

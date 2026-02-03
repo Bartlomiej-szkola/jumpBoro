@@ -66,7 +66,7 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     }
 
     public void initializeSize(int panelHeight) {
-        // Ustalamy bazową wysokość postaci (np. 1/7 ekranu)
+        // Ustalamy bazową wysokość postaci
         this.baseHeight = (int) panelHeight / 7;
         this.beforeJumpHeight = (int)(baseHeight * 0.7);
         this.jumpingHeight = (int)(baseHeight * 0.65);
@@ -136,9 +136,6 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
 
         state = CharacterState.STANDING;
         playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
-
-        /// Chyba nie potrzebne
-        /// this.height = baseHeight;
     }
 
     public void setMovingImage() {
@@ -146,9 +143,6 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
         if (state == CharacterState.CHARGING) return;
 
         state = CharacterState.MOVING;
-        // obrazek zmienia updateAnimation()
-        /// Chyba nie potrzebne
-        /// this.height = baseHeight;
     }
 
     public void setBeforeJumpImage() {
@@ -167,7 +161,7 @@ public class Player extends AbstractCharacter implements IMovable, IJumpable, ID
     }
 
     public void forceSetStanding() {
-        state = CharacterState.STANDING; // omijamy blokady
+        state = CharacterState.STANDING;
         playerCurrentImage = (facing == Facing.RIGHT) ? standingRight : standingLeft;
         this.height = baseHeight;
     }

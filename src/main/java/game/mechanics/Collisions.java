@@ -45,8 +45,6 @@ public class Collisions {    private final Player player;
         touchingPlatformByLeftSide(player.getLeftSide());
         touchingPlatformByRightSide(player.getRightSide());
         standingOnPlatform(player.getFeet(), player.getBelowFeet());
-        /// sprawdzaniue predkosci vertykalnej (ujemna = wznoszenie, dodatnia = opadanie)
-        /// System.out.println(movement.getJumpVerticalSpeed());
     }
 
     private void standingOnPlatform(Rectangle feet, Rectangle belowFeet){
